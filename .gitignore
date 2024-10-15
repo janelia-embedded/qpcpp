@@ -37,17 +37,21 @@
 version-*
 JLink*.*
 
-cert/
+include/qs.hpp
+include/qs_pkg.hpp
+src/qs/qs.cpp
+src/qs/qs_64bit.cpp
+src/qs/qs_fp.cpp
+src/qs/qs_rx.cpp
+src/qs/qutest.cpp
+
+priv/
 html/
 latex/
-doxygen/gen/
-test_priv/
 dbg/
 rel/
 spy/
-build/
-build_rel/
-build_spy/
+build*/
 settings/
 .settings/
 targetConfigs/
