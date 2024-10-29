@@ -1,10 +1,10 @@
-8d36fc1d18c8b55e792d6e404ce535253d4a95c5 *qpcpp.qm
+df3b8c24ea6860cc0938a4e78cc55024fd4335a5 *qpcpp.qm
 cc1c705ef791640a89e1aeec388c01c53e1b02c1 *include/qequeue.hpp
 1a8e0b05536b89c1cd3806782ae1a21dd4ceca69 *include/qk.hpp
 a40564d437b420bf21e7dc5181a8ab88eebc428a *include/qmpool.hpp
 e0d974faef6b60cc455e49abb32d43128b8c79cf *include/qp.hpp
 bf47a939e525fa575673f89b8106bcee166240a2 *include/qp_pkg.hpp
-205ebd9420858826ad061e040d2aead5d041c31f *include/qpcpp.hpp
+e5b0d14c9e6994b82a5cd9200bde46bd179bfb20 *include/qpcpp.hpp
 d4f14d2ed18ef725ea17d0a97b78ae22a283c96b *include/qs.hpp
 7429b60b804406d5f3d1d1f03b869c9f9170fa58 *include/qs_dummy.hpp
 9694f10e44d53563599410d37dd1c5a19cf1788b *include/qs_pkg.hpp
@@ -12,12 +12,12 @@ d4f14d2ed18ef725ea17d0a97b78ae22a283c96b *include/qs.hpp
 09e9ffe95120ba17a49d7039b5316f2614710dab *include/qstamp.hpp
 73749ed396bbc0419971769a47069448c8136960 *include/qv.hpp
 6d3c19a02d78bfc022e8e965a724711c0c40f1c3 *include/qxk.hpp
-7512146593026d5b769e06168475cf5d79ecf5de *include/README.md
+c96d4f8255776e682ebb0594e77e2240366d2532 *include/README.md
 71899ce74eeb04f333ed00d53f87719f722a39ab *src/qf/CMakeLists.txt
 81b54ca9a4dff44d24c0f3cd687aaa58afe634ab *src/qf/qep_hsm.cpp
 13cb63db437dd4f176dd846eda49bda9827ca571 *src/qf/qep_msm.cpp
 62f87a60d04e1c98f40162a166ec14a1f2f1252f *src/qf/qf_act.cpp
-1ec6312fd003cbe8151d3e8d596def291e8ca151 *src/qf/qf_actq.cpp
+bdef18e649ab9c5836f1b62a3dee36271e681dd3 *src/qf/qf_actq.cpp
 ed83f5f8b3533cc97ffc2a85aeeb63f29b4f1dd8 *src/qf/qf_defer.cpp
 f41d8815460d26f5bbf89e40dcb607b6a3ddeaa8 *src/qf/qf_dyn.cpp
 c99889c71ba46ef387aa849801f3afe46eaa6dc3 *src/qf/qf_mem.cpp
@@ -35,7 +35,7 @@ deacd749f11cd2037eca58b373771926542043dc *src/qs/CMakeLists.txt
 ad4e3a9faacc038cb51a7773ffc42903be947a22 *src/qs/qs_rx.cpp
 8008d9c24757b2bb02e85123aa89a3a33090921d *src/qs/qstamp.cpp
 92338453dc612419b0e16e0560e761312d0f3900 *src/qs/qutest.cpp
-7512146593026d5b769e06168475cf5d79ecf5de *src/qs/README.md
+c96d4f8255776e682ebb0594e77e2240366d2532 *src/qs/README.md
 b6d93a16f5b176d3da4888a7efb265730337f46d *src/qv/CMakeLists.txt
 f530563e062ff7ea84763f6e799bf4ca1cb73054 *src/qv/qv.cpp
 3aaa8b6ad54430fbaffc05ff8db9599a93fe937b *src/qxk/CMakeLists.txt

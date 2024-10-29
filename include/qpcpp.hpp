@@ -79,7 +79,13 @@ using char_t = char;
 
     //! @deprecated general purpose assertion with user-specified ID
     //! number that **always** evaluates the `expr_` expression.
-    #define Q_ALLEGE_ID(id_, expr_) ((void)(expr_))
+    #define Q_ALLEGE_ID(id_, expr_) (static_cast<void>(expr_))
+
+#elif defined Q_UNSAFE
+
+    //! @deprecated general purpose assertion with user-specified ID
+    //! number that **always** evaluates the `expr_` expression.
+    #define Q_ALLEGE_ID(id_, expr_) (static_cast<void>(expr_))
 
 #else // QP FuSa Subsystem enabled
 

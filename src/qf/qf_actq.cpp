@@ -451,6 +451,9 @@ QTicker::QTicker(std::uint_fast8_t const tickRate) noexcept
 {
     // reuse m_head for tick-rate
     m_eQueue.m_head = static_cast<QEQueueCtr>(tickRate);
+    #ifndef Q_UNSAFE
+    m_eQueue.m_head_dis = static_cast<QEQueueCtr>(~tickRate);
+    #endif // ndef Q_UNSAFE
 }
 
 //${QF::QTicker::init} .......................................................
@@ -466,6 +469,9 @@ void QTicker::init(
     QF_MEM_SYS();
 
     m_eQueue.m_tail = 0U;
+    #ifndef Q_UNSAFE
+    m_eQueue.m_tail_dis = static_cast<QEQueueCtr>(~0U);
+    #endif // ndef Q_UNSAFE
 
     QF_MEM_APP();
     QF_CRIT_EXIT();
@@ -483,14 +489,28 @@ void QTicker::dispatch(
     QF_CRIT_ENTRY();
     QF_MEM_SYS();
 
-    QEQueueCtr nTicks = m_eQueue.m_tail; // save # of ticks
-    m_eQueue.m_tail = 0U; // clear the # ticks
+    // get volatile into tempories
+    QEQueueCtr nTicks = m_eQueue.m_tail;
+    QEQueueCtr const tickRate = m_eQueue.m_head;
+
+    #ifndef Q_UNSAFE
+    Q_REQUIRE_INCRIT(700, nTicks > 0U);
+    Q_INVARIANT_INCRIT(701, nTicks
+        == static_cast<QEQueueCtr>(~m_eQueue.m_tail_dis));
+    Q_INVARIANT_INCRIT(702, tickRate
+        == static_cast<QEQueueCtr>(~m_eQueue.m_head_dis));
+    #endif // ndef Q_UNSAFE
+
+    m_eQueue.m_tail = 0U; // clear # ticks
+    #ifndef Q_UNSAFE
+    m_eQueue.m_tail_dis = static_cast<QEQueueCtr>(~0U);
+    #endif // ndef Q_UNSAFE
 
     QF_MEM_APP();
     QF_CRIT_EXIT();
 
     for (; nTicks > 0U; --nTicks) {
-        QTimeEvt::tick(static_cast<std::uint_fast8_t>(m_eQueue.m_head),
+        QTimeEvt::tick(static_cast<std::uint_fast8_t>(tickRate),
                        this);
     }
 }
@@ -501,22 +521,55 @@ void QTicker::trig_(void const * const sender) noexcept {
     Q_UNUSED_PAR(sender);
     #endif
 
+    static QEvt const tickEvt(0U); // immutable event
+
     QF_CRIT_STAT
     QF_CRIT_ENTRY();
     QF_MEM_SYS();
 
-    if (m_eQueue.m_frontEvt == nullptr) {
+    QEQueueCtr nTicks = m_eQueue.m_tail; // get volatile into tempory
 
-        static QEvt const tickEvt(0U); // immutable event
+    if (m_eQueue.m_frontEvt == nullptr) {
+    #ifndef Q_UNSAFE
+        Q_REQUIRE_INCRIT(800, nTicks == 0U);
+        Q_REQUIRE_INCRIT(801, m_eQueue.m_nFree == 1U);
+        Q_INVARIANT_INCRIT(802, m_eQueue.m_frontEvt_dis
+            == static_cast<std::uintptr_t>(~Q_PTR2UINT_CAST_(nullptr)));
+        Q_INVARIANT_INCRIT(803,
+            1U == static_cast<QEQueueCtr>(~m_eQueue.m_nFree_dis));
+        Q_INVARIANT_INCRIT(804,
+            0U == static_cast<QEQueueCtr>(~m_eQueue.m_tail_dis));
+    #endif // ndef Q_UNSAFE
 
         m_eQueue.m_frontEvt = &tickEvt; // deliver event directly
-        m_eQueue.m_nFree = (m_eQueue.m_nFree - 1U); // one less free event
+        m_eQueue.m_nFree = 0U;
+    #ifndef Q_UNSAFE
+        m_eQueue.m_frontEvt_dis =
+            static_cast<std::uintptr_t>(~Q_PTR2UINT_CAST_(&tickEvt));
+        m_eQueue.m_nFree_dis = static_cast<QEQueueCtr>(~0U);
+    #endif // ndef Q_UNSAFE
 
         QACTIVE_EQUEUE_SIGNAL_(this); // signal the event queue
     }
+    else {
+    #ifndef Q_UNSAFE
+        Q_REQUIRE_INCRIT(810, (nTicks > 0U) && (nTicks < 0xFFU));
+        Q_REQUIRE_INCRIT(811, m_eQueue.m_nFree == 0U);
+        Q_INVARIANT_INCRIT(812, m_eQueue.m_frontEvt_dis
+            == static_cast<std::uintptr_t>(~Q_PTR2UINT_CAST_(&tickEvt)));
+        Q_INVARIANT_INCRIT(813,
+            0U == static_cast<QEQueueCtr>(~m_eQueue.m_nFree_dis));
+        Q_INVARIANT_INCRIT(814,
+            nTicks == static_cast<QEQueueCtr>(~m_eQueue.m_tail_dis));
+    #endif // ndef Q_UNSAFE
+    }
 
-    // account for one more tick event
-    m_eQueue.m_tail = (m_eQueue.m_tail + 1U);
+    ++nTicks; // account for one more tick event
+
+    m_eQueue.m_tail = nTicks; // update the original
+    #ifndef Q_UNSAFE
+    m_eQueue.m_tail_dis = static_cast<QEQueueCtr>(~nTicks);
+    #endif // ndef Q_UNSAFE
 
     QS_BEGIN_PRE(QS_QF_ACTIVE_POST, m_prio)
         QS_TIME_PRE();      // timestamp
